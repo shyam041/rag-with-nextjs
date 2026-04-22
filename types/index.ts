@@ -13,6 +13,7 @@ export interface Document {
   id: string
   name: string
   originalName: string
+  blobPath: string
   focusAreaId: string
   status: DocumentStatus
   chunkCount: number
