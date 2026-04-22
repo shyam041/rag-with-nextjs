@@ -45,6 +45,9 @@ yarn-error.log*
 next-env.d.ts
 
 uploads/*.pdf
+# SQLite database — Prisma v6 resolves file:./dev.db relative to prisma/schema.prisma → prisma/dev.db
 prisma/dev.db
 prisma/dev.db-journal
-/lib/generated/prisma
+# also ignore if it ever lands at project root
+/dev.db
+/dev.db-journal
