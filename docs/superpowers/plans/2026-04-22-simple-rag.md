@@ -95,7 +95,7 @@ next.config.mjs
 ## Task 1: Scaffold Next.js 15 Project
 
 **Files:**
-- Create: `package.json`, `next.config.mjs`, `tsconfig.json`, `tailwind.config.ts`, `app/layout.tsx`, `app/page.tsx`
+- Create: `package.json`, `next.config.ts`, `tsconfig.json`, `app/layout.tsx`, `app/page.tsx`
 
 - [ ] **Step 1: Run create-next-app in the current directory**
 
@@ -2959,11 +2959,12 @@ git add components/instructions/ app/instructions/ && git commit -m "feat: add i
 **Files:**
 - Modify: `next.config.mjs`
 
-- [ ] **Step 1: Update `next.config.mjs` for server-side packages**
+- [ ] **Step 1: Update `next.config.ts` for server-side packages**
 
-```javascript
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+```typescript
+import type { NextConfig } from "next"
+
+const nextConfig: NextConfig = {
   serverExternalPackages: ["pdf-parse", "chromadb", "@prisma/client"],
   webpack: (config, { isServer }) => {
     if (isServer) {
