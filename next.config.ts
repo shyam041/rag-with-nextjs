@@ -1,7 +1,13 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  serverExternalPackages: ["pdf-parse", "chromadb", "@prisma/client"],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...(config.externals || []), "canvas"]
+    }
+    return config
+  },
+}
 
-export default nextConfig;
+export default nextConfig

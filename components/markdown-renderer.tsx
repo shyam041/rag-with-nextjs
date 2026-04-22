@@ -12,12 +12,10 @@ interface Props {
 export function MarkdownRenderer({ content }: Props) {
   const clean = typeof window !== "undefined" ? DOMPurify.sanitize(content) : content
   return (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeHighlight]}
-      className="prose prose-sm max-w-none dark:prose-invert"
-    >
-      {clean}
-    </ReactMarkdown>
+    <div className="prose prose-sm max-w-none dark:prose-invert">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+        {clean}
+      </ReactMarkdown>
+    </div>
   )
 }
