@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model FocusArea {
+  id               String         @id @default(cuid())
+  namespace        String         @unique
+  name             String
+  description      String?
+  chromaCollection String         @unique
+  createdAt        DateTime       @default(now())
+  documents        Document[]
+  instructions     Instruction[]
+  conversations    Conversation[]
+}
+
+model Document {
+  id           String    @id @default(cuid())
+  name         String
+  originalName String
+  blobPath     String
+  focusAreaId  String
+  focusArea    FocusArea @relation(fields: [focusAreaId], references: [id])
+  status       String
+  chunkCount   Int       @default(0)
+  fileSize     Int
+  mimeType     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Conversation {
+  id           String                    @id @default(cuid())
+  title        String?
+  focusAreaId  String
+  focusArea    FocusArea                 @relation(fields: [focusAreaId], references: [id])
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  messages     Message[]
+  instructions ConversationInstruction[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String
+  content        String
+  sources        String?
+  createdAt      DateTime     @default(now())
+}
+
+model Instruction {
+  id                String                    @id @default(cuid())
+  title             String
+  content           String
+  focusAreaId       String
+  focusArea         FocusArea                 @relation(fields: [focusAreaId], references: [id])
+  isActive          Boolean                   @default(true)
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  conversationLinks ConversationInstruction[]
+}
+
+model ConversationInstruction {
+  conversationId String
+  instructionId  String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  instruction    Instruction  @relation(fields: [instructionId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, instructionId])
+}
