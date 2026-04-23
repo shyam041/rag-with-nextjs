@@ -23,7 +23,9 @@ Produce refined search queries as JSON.`,
 export const gradeDocumentPrompt = ChatPromptTemplate.fromMessages([
   [
     "system",
-    `You are a document relevance grader. Determine if a document is relevant to answer a user query.
+    `You are a document relevance grader. Determine if a document chunk contains information that could help answer the user query.
+
+The document may be structured data (tables, invoices, receipts, lists) — treat any chunk containing related fields, values, or entities as relevant even if the formatting is raw or unstructured.
 
 Respond with a JSON object: {{ "relevant": true }} or {{ "relevant": false }}`,
   ],
@@ -34,7 +36,7 @@ Respond with a JSON object: {{ "relevant": true }} or {{ "relevant": false }}`,
 Document content:
 {content}
 
-Is this document relevant to the query?`,
+Does this chunk contain information relevant to the query? When in doubt, prefer relevant: true.`,
   ],
 ])
 

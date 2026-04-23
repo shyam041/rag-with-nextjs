@@ -5,8 +5,8 @@ import { env } from "@/lib/env"
 import type { RAGState } from "@/rag/state"
 import type { SourceDetail } from "@/types"
 
-const SCORE_THRESHOLD = 0.5
-const K = 5
+const SCORE_THRESHOLD = 0.3
+const K = 10
 
 export async function retrieve(state: RAGState): Promise<Partial<RAGState>> {
   const focusArea = await prisma.focusArea.findUniqueOrThrow({

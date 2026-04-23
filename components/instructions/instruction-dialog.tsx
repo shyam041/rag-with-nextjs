@@ -28,6 +28,7 @@ export function InstructionDialog({ open, onClose, instruction }: Props) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: instruction?.content ?? "",
+    immediatelyRender: false,
   })
 
   useEffect(() => {

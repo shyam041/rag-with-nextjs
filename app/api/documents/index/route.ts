@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     await indexDocument(documentId)
     return NextResponse.json({ success: true })
   } catch (error) {
+    console.error("[/api/documents/index] indexDocument failed:", error)
     return NextResponse.json({ error: String(error) }, { status: 500 })
   }
 }
