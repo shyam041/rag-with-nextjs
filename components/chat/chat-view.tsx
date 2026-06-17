@@ -27,6 +27,8 @@ export function ChatView({ conversationId }: Props) {
   useEffect(() => {
     if (existing?.messages && conversationId) {
       setMessages(conversationId, existing.messages)
+    } else if (!conversationId) {
+      setMessages("new", [])
     }
   }, [existing, conversationId, setMessages])
 

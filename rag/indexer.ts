@@ -1,13 +1,19 @@
 import fs from "fs"
 import path from "path"
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require("pdf-parse")
 import { Chroma } from "@langchain/community/vectorstores/chroma"
 import { prisma } from "@/lib/prisma"
 import { getEmbeddings } from "@/lib/embeddings"
 import { getOrCreateCollection } from "@/lib/chroma"
 import { chunkPages } from "@/rag/chunker"
 import { env } from "@/lib/env"
+
+async function parsePdfBuffer(buffer: Buffer): Promise<{ text: string }> {
+  // pdf-parse is in serverExternalPackages so it runs as a true Node.js module,
+  // never bundled by webpack — avoids the pdfjs-dist worker setup issue in Next.js.
+  const pdfParse = (await import("pdf-parse")).default
+  const data = await pdfParse(buffer)
+  return { text: data.text }
+}
 
 export async function indexDocument(documentId: string): Promise<void> {
   const doc = await prisma.document.findUniqueOrThrow({
@@ -27,7 +33,7 @@ export async function indexDocument(documentId: string): Promise<void> {
   try {
     const filePath = path.resolve(doc.blobPath)
     const buffer = fs.readFileSync(filePath)
-    const parsed = await pdfParse(buffer)
+    const parsed = await parsePdfBuffer(buffer)
 
     // pdf-parse gives full text; split by form-feed character for pages
     const rawPages = parsed.text.split("\f")
